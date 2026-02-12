@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #1A365D;
+  --color-navy-light: #2A4A7F;
+  --color-navy-dark: #0F2240;
+  --color-cream: #FFFDF5;
+  --color-cream-dark: #FFF8E7;
+  --color-gold: #D4A017;
+  --color-gold-light: #F0C75E;
+  --color-gold-dark: #B8860B;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  background-color: var(--color-cream);
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
