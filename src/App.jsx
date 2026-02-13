@@ -1,3 +1,5 @@
+import { useRef, useState, useEffect } from "react";
+
 function App() {
   return (
     <div className="min-h-screen bg-cream">
@@ -228,6 +230,9 @@ function Testimonial() {
 
 /* ─── Pricing ─── */
 function Pricing() {
+  const scrollRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(1);
+
   const plans = [
     {
       badge: null,
@@ -245,7 +250,7 @@ function Pricing() {
       unit: "/ 三個月",
       note: "即日起至 2/16（除夕前夕）",
       highlight: true,
-      features: ["完整保單健檢功能", "AI 客戶互動窗口", "終身優先更新權", "固定優惠續約權", "創始夥伴專屬群組"],
+      features: ["完整保單健檢功能", "AI 客戶互動窗口", "創始夥伴專屬群組"],
     },
     {
       badge: null,
@@ -254,87 +259,174 @@ function Pricing() {
       unit: "/ 三個月",
       note: "2/17（大年初一）起",
       highlight: false,
-      features: ["完整保單健檢功能", "AI 客戶互動窗口", "終身優先更新權", "固定優惠續約權"],
+      features: ["完整保單健檢功能", "AI 客戶互動窗口", "會員專屬群組"],
     },
   ];
 
+  // Scroll to center card on mount (mobile only)
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    // Wait for layout
+    requestAnimationFrame(() => {
+      const card = el.children[1];
+      if (card) {
+        el.scrollLeft = card.offsetLeft - (el.offsetWidth - card.offsetWidth) / 2;
+      }
+    });
+  }, []);
+
+  // Track active index on scroll for dot indicators
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const center = el.scrollLeft + el.offsetWidth / 2;
+      let closest = 0;
+      let minDist = Infinity;
+      for (let i = 0; i < el.children.length; i++) {
+        const child = el.children[i];
+        const childCenter = child.offsetLeft + child.offsetWidth / 2;
+        const dist = Math.abs(center - childCenter);
+        if (dist < minDist) {
+          minDist = dist;
+          closest = i;
+        }
+      }
+      setActiveIndex(closest);
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const renderCard = (plan, i) => (
+    <div
+      key={i}
+      className={`relative rounded-3xl p-8 transition-shadow ${
+        plan.highlight
+          ? "bg-navy text-white shadow-2xl shadow-navy/30 ring-2 ring-gold md:scale-105 md:-my-4"
+          : "bg-cream border border-navy/10 shadow-sm hover:shadow-lg"
+      }`}
+    >
+      {plan.badge && (
+        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gold text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md">
+          {plan.badge}
+        </div>
+      )}
+
+      <h3 className={`text-lg font-bold mt-2 ${plan.highlight ? "text-white" : "text-navy"}`}>
+        {plan.title}
+      </h3>
+
+      <div className="mt-4 flex items-baseline gap-1">
+        <span className={`text-sm ${plan.highlight ? "text-white/70" : "text-gray-500"}`}>NT$</span>
+        <span className={`text-4xl font-black ${plan.highlight ? "text-gold-light" : "text-navy"}`}>
+          {plan.price}
+        </span>
+        <span className={`text-sm ${plan.highlight ? "text-white/70" : "text-gray-500"}`}>{plan.unit}</span>
+      </div>
+
+      <p className={`mt-2 text-sm ${plan.highlight ? "text-white/60" : "text-gray-400"}`}>{plan.note}</p>
+
+      <hr className={`my-6 ${plan.highlight ? "border-white/10" : "border-navy/10"}`} />
+
+      <ul className="space-y-3">
+        {plan.features.map((f, j) => (
+          <li key={j} className="flex items-start gap-2.5 text-sm">
+            <svg
+              className={`w-5 h-5 flex-shrink-0 mt-0.5 ${plan.highlight ? "text-gold-light" : "text-gold"}`}
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span className={plan.highlight ? "text-white/90" : "text-gray-700"}>{f}</span>
+          </li>
+        ))}
+      </ul>
+
+      <a
+        href="#pricing"
+        className={`mt-8 block text-center py-3.5 rounded-full font-bold text-sm no-underline transition-all ${
+          plan.highlight
+            ? "bg-gold text-white hover:bg-gold-light shadow-lg shadow-gold/30"
+            : "bg-navy/5 text-navy hover:bg-navy hover:text-white"
+        }`}
+      >
+        {plan.highlight ? "立即搶先加入" : "選擇此方案"}
+      </a>
+    </div>
+  );
+
   return (
-    <section id="pricing" className="py-20 px-4 sm:px-6 bg-white scroll-mt-16">
-      <div className="max-w-5xl mx-auto">
+    <section id="pricing" className="py-20 bg-white scroll-mt-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-14">
           <span className="text-sm font-semibold text-gold-dark tracking-wide uppercase">階梯式早鳥計畫</span>
           <h2 className="mt-3 text-2xl sm:text-3xl font-bold text-navy">限時限量，把握最佳時機</h2>
           <p className="mt-3 text-gray-500">越早加入，享受越多優惠</p>
         </div>
+      </div>
 
-        <div className="grid gap-6 md:grid-cols-3 items-start">
+      {/* Mobile: horizontal scroll carousel */}
+      <div className="md:hidden">
+        <div
+          ref={scrollRef}
+          className="no-scrollbar flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth px-[15%] pt-6 pb-4"
+          style={{ clipPath: "inset(-16px -100% -16px -100%)" }}
+        >
           {plans.map((plan, i) => (
             <div
               key={i}
-              className={`relative rounded-3xl p-8 transition-shadow ${
-                plan.highlight
-                  ? "bg-navy text-white shadow-2xl shadow-navy/30 ring-2 ring-gold md:scale-105 md:-my-4"
-                  : "bg-cream border border-navy/10 shadow-sm hover:shadow-lg"
-              }`}
+              className="snap-center shrink-0 w-[75%] transition-transform duration-300"
+              style={{ transform: i === activeIndex ? "scale(1.03)" : "scale(0.97)" }}
             >
-              {plan.badge && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gold text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md">
-                  {plan.badge}
-                </div>
-              )}
-
-              <h3 className={`text-lg font-bold mt-2 ${plan.highlight ? "text-white" : "text-navy"}`}>
-                {plan.title}
-              </h3>
-
-              <div className="mt-4 flex items-baseline gap-1">
-                <span className={`text-sm ${plan.highlight ? "text-white/70" : "text-gray-500"}`}>NT$</span>
-                <span className={`text-4xl font-black ${plan.highlight ? "text-gold-light" : "text-navy"}`}>
-                  {plan.price}
-                </span>
-                <span className={`text-sm ${plan.highlight ? "text-white/70" : "text-gray-500"}`}>{plan.unit}</span>
-              </div>
-
-              <p className={`mt-2 text-sm ${plan.highlight ? "text-white/60" : "text-gray-400"}`}>{plan.note}</p>
-
-              <hr className={`my-6 ${plan.highlight ? "border-white/10" : "border-navy/10"}`} />
-
-              <ul className="space-y-3">
-                {plan.features.map((f, j) => (
-                  <li key={j} className="flex items-start gap-2.5 text-sm">
-                    <svg
-                      className={`w-5 h-5 flex-shrink-0 mt-0.5 ${plan.highlight ? "text-gold-light" : "text-gold"}`}
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className={plan.highlight ? "text-white/90" : "text-gray-700"}>{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <a
-                href="#pricing"
-                className={`mt-8 block text-center py-3.5 rounded-full font-bold text-sm no-underline transition-all ${
-                  plan.highlight
-                    ? "bg-gold text-white hover:bg-gold-light shadow-lg shadow-gold/30"
-                    : "bg-navy/5 text-navy hover:bg-navy hover:text-white"
-                }`}
-              >
-                {plan.highlight ? "立即搶先加入" : "選擇此方案"}
-              </a>
+              {renderCard(plan, i)}
             </div>
           ))}
         </div>
+        {/* Dot indicators */}
+        <div className="flex justify-center gap-2 mt-4">
+          {plans.map((_, i) => (
+            <button
+              key={i}
+              aria-label={`方案 ${i + 1}`}
+              className={`w-2 h-2 rounded-full transition-all ${
+                i === activeIndex ? "bg-navy w-5" : "bg-navy/20"
+              }`}
+              onClick={() => {
+                const el = scrollRef.current;
+                if (!el) return;
+                const card = el.children[i];
+                if (card) {
+                  el.scrollTo({
+                    left: card.offsetLeft - (el.offsetWidth - card.offsetWidth) / 2,
+                    behavior: "smooth",
+                  });
+                }
+              }}
+            />
+          ))}
+        </div>
+      </div>
 
+      {/* Desktop: grid layout */}
+      <div className="hidden md:block px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid gap-6 md:grid-cols-3 items-start">
+            {plans.map((plan, i) => renderCard(plan, i))}
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <p className="mt-10 text-center text-sm text-gray-400">
-          早鳥成員享有<span className="text-gold-dark font-semibold">終身優先更新權</span>與
-          <span className="text-gold-dark font-semibold">固定優惠續約權</span>。
+          早鳥成員享有<span className="text-gold-dark font-semibold">創始夥伴專屬群組</span>與
+          <span className="text-gold-dark font-semibold">早鳥優惠價格</span>。
         </p>
       </div>
     </section>
