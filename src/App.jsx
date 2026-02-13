@@ -7,6 +7,7 @@ function App() {
       <Hero />
       <PainPoints />
       <Features />
+      <HowItWorks />
       <Testimonial />
       <Pricing />
       <Footer />
@@ -197,6 +198,73 @@ function Features() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── HowItWorks ─── */
+function HowItWorks() {
+  const steps = [
+    {
+      step: "1",
+      title: "上傳保單資料",
+      desc: "拖放或點選上傳保單 PDF、照片、截圖，系統自動辨識並建立客戶資料。",
+      img: "upload-example.png",
+    },
+    {
+      step: "2",
+      title: "AI 產出健檢報告",
+      desc: "自動分析保障項目、額度與缺口，產生一目了然的健檢報告。",
+      img: "report-example.png",
+    },
+    {
+      step: "3",
+      title: "客戶 AI 互動諮詢",
+      desc: "客戶可透過專屬 AI 窗口即時提問，深入了解自身保障狀況。",
+      img: "ai-chat-example.png",
+    },
+  ];
+
+  return (
+    <section className="py-20 px-4 sm:px-6 bg-white">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-16">
+          <span className="text-sm font-semibold text-gold-dark tracking-wide uppercase">產品實際畫面</span>
+          <h2 className="mt-3 text-2xl sm:text-3xl font-bold text-navy">三步驟，完成保單健檢</h2>
+          <p className="mt-3 text-gray-500">從上傳到互動，全程 AI 輔助</p>
+        </div>
+
+        <div className="space-y-16 md:space-y-24">
+          {steps.map((s, i) => (
+            <div
+              key={i}
+              className={`flex flex-col gap-8 md:gap-12 ${
+                i % 2 === 1 ? "md:flex-row-reverse" : "md:flex-row"
+              } items-center`}
+            >
+              {/* Screenshot */}
+              <div className="w-full md:w-3/5">
+                <div className="rounded-2xl overflow-hidden shadow-lg border border-navy/5">
+                  <img
+                    src={`${import.meta.env.BASE_URL}${s.img}`}
+                    alt={s.title}
+                    className="w-full h-auto block"
+                  />
+                </div>
+              </div>
+
+              {/* Text */}
+              <div className="w-full md:w-2/5">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gold text-white font-bold text-sm mb-4">
+                  {s.step}
+                </div>
+                <h3 className="text-xl font-bold text-navy mb-3">{s.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{s.desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
