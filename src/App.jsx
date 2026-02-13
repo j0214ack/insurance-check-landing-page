@@ -241,6 +241,7 @@ function Pricing() {
       unit: "/ 每月",
       note: "上線後標準定價",
       highlight: false,
+      availableLabel: "正式上線後開放",
       features: ["完整保單健檢功能", "AI 客戶互動窗口", "標準客服支援"],
     },
     {
@@ -250,6 +251,7 @@ function Pricing() {
       unit: "/ 三個月",
       note: "即日起至 2/16（除夕前夕）",
       highlight: true,
+      availableLabel: null,
       features: ["完整保單健檢功能", "AI 客戶互動窗口", "創始夥伴專屬群組"],
     },
     {
@@ -259,6 +261,7 @@ function Pricing() {
       unit: "/ 三個月",
       note: "2/17（大年初一）起",
       highlight: false,
+      availableLabel: "2/17（大年初一）起開放",
       features: ["完整保單健檢功能", "AI 客戶互動窗口", "會員專屬群組"],
     },
   ];
@@ -349,16 +352,23 @@ function Pricing() {
         ))}
       </ul>
 
-      <a
-        href="#pricing"
-        className={`mt-8 block text-center py-3.5 rounded-full font-bold text-sm no-underline transition-all ${
-          plan.highlight
-            ? "bg-gold text-white hover:bg-gold-light shadow-lg shadow-gold/30"
-            : "bg-navy/5 text-navy hover:bg-navy hover:text-white"
-        }`}
-      >
-        {plan.highlight ? "立即搶先加入" : "選擇此方案"}
-      </a>
+      {plan.highlight ? (
+        <a
+          href="https://forms.gle/sn8hC3zV82u4LUdi6"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-8 block text-center py-3.5 rounded-full font-bold text-sm no-underline transition-all bg-gold text-white hover:bg-gold-light shadow-lg shadow-gold/30"
+        >
+          立即搶先加入
+        </a>
+      ) : (
+        <div className="mt-8 flex items-center justify-center gap-2 py-3.5 rounded-full border-2 border-dashed border-navy/15 text-navy/40 text-sm">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          {plan.availableLabel}
+        </div>
+      )}
     </div>
   );
 
