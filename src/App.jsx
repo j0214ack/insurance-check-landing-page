@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 function App() {
   return (
@@ -24,12 +25,20 @@ function Nav() {
           <span className="text-2xl">🛡️</span>
           <span>保單健檢助理</span>
         </a>
-        <a
-          href="#pricing"
-          className="hidden sm:inline-flex items-center px-5 py-2 bg-gold text-white font-semibold rounded-full text-sm hover:bg-gold-dark transition-colors no-underline shadow-sm"
-        >
-          立即加入早鳥
-        </a>
+        <div className="flex items-center gap-3">
+          <a
+            href="https://app.agbuddy.tw"
+            className="hidden sm:inline-flex items-center px-4 py-2 text-navy font-medium text-sm hover:text-navy-light transition-colors no-underline"
+          >
+            登入 / 註冊
+          </a>
+          <a
+            href="#pricing"
+            className="hidden sm:inline-flex items-center px-5 py-2 bg-gold text-white font-semibold rounded-full text-sm hover:bg-gold-dark transition-colors no-underline shadow-sm"
+          >
+            立即加入早鳥
+          </a>
+        </div>
       </div>
     </nav>
   );
@@ -515,7 +524,16 @@ function Pricing() {
 function Footer() {
   return (
     <footer className="py-10 px-4 sm:px-6 bg-cream border-t border-navy/5">
-      <div className="max-w-4xl mx-auto text-center">
+      <div className="max-w-4xl mx-auto text-center space-y-3">
+        <div className="flex items-center justify-center gap-4 text-sm">
+          <Link to="/terms" className="text-gray-400 hover:text-navy transition-colors no-underline">
+            服務條款
+          </Link>
+          <span className="text-gray-300">|</span>
+          <Link to="/privacy" className="text-gray-400 hover:text-navy transition-colors no-underline">
+            隱私權政策
+          </Link>
+        </div>
         <p className="text-sm text-gray-400">
           &copy; {new Date().getFullYear()} 保單健檢助理. All rights reserved.
         </p>
