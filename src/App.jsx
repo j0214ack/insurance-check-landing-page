@@ -28,7 +28,7 @@ function Nav() {
         <div className="flex items-center gap-3">
           <a
             href="https://app.agbuddy.tw"
-            className="hidden sm:inline-flex items-center px-4 py-2 text-navy font-medium text-sm hover:text-navy-light transition-colors no-underline"
+            className="inline-flex items-center px-4 py-2 text-navy font-medium text-sm hover:text-navy-light transition-colors no-underline"
           >
             登入 / 註冊
           </a>
